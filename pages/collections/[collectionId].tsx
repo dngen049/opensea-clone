@@ -6,11 +6,25 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react';
 import { HeartIcon } from "@heroicons/react/outline"
+import Router from 'next/router'
+
 
 const NFTCard: React.FC<{
     src: string
-}> = ({ src, key, title, name }) => (
+    key: string | number;
+    id: string;
+    title: string;
+    name: string;
+    isListed: boolean;
+    price: string
+}> = ({ src, key, id, title, name, isListed, price }) => (
     <div
+        onClick={() => {
+            Router.push({
+                pathname: `/nfts/${id}`,
+                query: { isListed: isListed },
+            })
+        }}
         key={key}
         className="grid grid-rows-7 border border-gray-200 w-[14rem] h-[22rem] my-10 mx-5 rounded-2xl overflow-hidden cursor-pointer hover:shadow-lg"
     >
@@ -30,12 +44,12 @@ const NFTCard: React.FC<{
                             src="https://storage.opensea.io/files/6f8e2979d428180222796ff4a33ab929.svg"
                             alt="eth"
                             className='h-6 mr-2'
-                        /> 100</p>
+                        /> {price}</p>
                 </div>
             </div>
         </div>
         <footer className='flex justify-end w-full p-3 bg-gray-100'>
-            <HeartIcon className='w-4 h-4' />
+            <HeartIcon className='w-4 h-4 hover:bg-red-600 hover:border' />
         </footer>
     </div>
 )
@@ -153,9 +167,15 @@ const Collection: NextPage = () => {
 
                 <div className='flex flex-wrap justify-center w-full'>
                     {nfts?.map((nft, i) => {
+                        const list = listing?.find((l) => l.asset.id === nft.id)
+
                         return <NFTCard
+                            key={i}
+                            id={nft.id}
                             src={nft?.image as string}
-                            name={nft.name}
+                            price={list?.buyoutCurrencyValuePerToken.displayValue}
+                            name={nft?.name}
+                            isListed={list !== undefined}
                             title={collection?.title} />
                     }
                     )}
