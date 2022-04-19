@@ -20,7 +20,6 @@ const Body: React.FC = () => (
         <button className='ml-6 border border-[#2181e2] bg-white px-12 py-4 text-lg text-[#2181e2] font-semibold rounded-md hover:border-[#42a0ff] cursor-pointer'>
           Create
         </button>
-
       </div>
     </div>
     <img
